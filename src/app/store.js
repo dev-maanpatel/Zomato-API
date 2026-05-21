@@ -8,42 +8,53 @@ import {
   persistReducer,
 } from "redux-persist";
 
-import authReducer from "../features/authSlice";
+import authReducer from "../features/auth/authSlice";
 
-import foodReducer from "../features/foodSlice";
+import foodReducer from "../features/food/foodSlice";
 
-import orderReducer from "../features/orderSlice";
+import orderReducer from "../features/order/orderSlice";
 
-const storage = {
+const customStorage = {
   getItem: (key) => {
     return Promise.resolve(
       localStorage.getItem(key)
     );
   },
 
-  setItem: (key, value) => {
-    localStorage.setItem(key, value);
+  setItem: (
+    key,
+    value
+  ) => {
+    localStorage.setItem(
+      key,
+      value
+    );
 
     return Promise.resolve();
   },
 
   removeItem: (key) => {
-    localStorage.removeItem(key);
+    localStorage.removeItem(
+      key
+    );
 
     return Promise.resolve();
   },
 };
 
-const rootReducer =
+const appReducer =
   combineReducers({
     auth: authReducer,
+
     foods: foodReducer,
+
     orders: orderReducer,
   });
 
 const persistConfig = {
   key: "root",
-  storage,
+
+  storage: customStorage,
 
   whitelist: ["auth"],
 };
@@ -51,18 +62,20 @@ const persistConfig = {
 const persistedReducer =
   persistReducer(
     persistConfig,
-    rootReducer
+    appReducer
   );
 
 export const store =
   configureStore({
-    reducer: persistedReducer,
+    reducer:
+      persistedReducer,
 
     middleware: (
       getDefaultMiddleware
     ) =>
       getDefaultMiddleware({
-        serializableCheck: false,
+        serializableCheck:
+          false,
       }),
   });
 

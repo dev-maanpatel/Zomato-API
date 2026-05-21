@@ -1,6 +1,36 @@
+import {
+  Provider,
+} from "react-redux";
+
+import {
+  PersistGate,
+} from "redux-persist/integration/react";
+
 import AppRoutes from "./routes/AppRoutes";
 
-export default function App() {
+import {
+  store,
+  persistor,
+} from "./app/store";
 
-  return <AppRoutes />;
+import "./styles/global.css";
+
+export default function App() {
+  return (
+    <Provider
+      store={store}
+    >
+
+      <PersistGate
+        persistor={
+          persistor
+        }
+      >
+
+        <AppRoutes />
+
+      </PersistGate>
+
+    </Provider>
+  );
 }

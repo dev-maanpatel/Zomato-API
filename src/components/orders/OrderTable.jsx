@@ -1,46 +1,62 @@
+
 import {
   useDispatch,
 } from "react-redux";
 
+import StatusBadge from "./StatusBadge";
+
 import {
   updateOrderStatus,
-} from "../../features/orderSlice";
-
-import OrderStatusBadge from "./OrderStatusBadge";
+} from "../../features/order/orderSlice";
 
 export default function OrderTable({
   orders,
 }) {
+  const dispatch =
+    useDispatch();
 
-  const dispatch = useDispatch();
+  const changeOrderStatus =
+    (
+      orderId,
+      updatedStatus
+    ) => {
+      dispatch(
+        updateOrderStatus({
+          id: orderId,
 
-  const handleStatusChange = (
-    orderId,
-    status
-  ) => {
-
-    dispatch(
-      updateOrderStatus({
-        id: orderId,
-        status,
-      })
-    );
-  };
+          status:
+            updatedStatus,
+        })
+      );
+    };
 
   return (
-    <div className="bg-[#1b1b1b] rounded-3xl border border-white/5 overflow-hidden">
+    <div className="bg-[#111827] border border-white/5 rounded-3xl overflow-hidden">
 
       <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
 
-        <h1 className="text-3xl font-bold text-white">
-          Restaurant Orders
-        </h1>
+        <div>
 
-        <p className="text-gray-400">
-          Total Orders:
-          {" "}
-          {orders?.length || 0}
-        </p>
+          <h2 className="text-3xl font-bold text-white">
+
+            Restaurant Orders
+
+          </h2>
+
+          <p className="text-gray-400 mt-2">
+
+            Manage all customer orders
+
+          </p>
+
+        </div>
+
+        <div className="hidden md:flex items-center justify-center w-16 h-16 rounded-2xl bg-red-500 text-white text-xl font-bold">
+
+          {orders?.length ||
+            0}
+
+        </div>
 
       </div>
 
@@ -48,32 +64,44 @@ export default function OrderTable({
 
         <table className="w-full">
 
-          <thead className="bg-[#222]">
+          <thead className="bg-[#1F2937]">
 
             <tr>
 
               <th className="text-left px-8 py-5">
+
                 Order ID
+
               </th>
 
               <th className="text-left px-8 py-5">
+
                 Customer
+
               </th>
 
               <th className="text-left px-8 py-5">
-                Foods
+
+                Items
+
               </th>
 
               <th className="text-left px-8 py-5">
-                Amount
+
+                Total
+
               </th>
 
               <th className="text-left px-8 py-5">
+
                 Status
+
               </th>
 
               <th className="text-left px-8 py-5">
-                Change Status
+
+                Update
+
               </th>
 
             </tr>
@@ -82,59 +110,59 @@ export default function OrderTable({
 
           <tbody>
 
-            {
-              orders?.length > 0 ? (
-
-                orders?.map((order) => (
-
+            {orders?.length >
+            0 ? (
+              orders.map(
+                (order) => (
                   <tr
-                    key={order._id}
-                    className="border-t border-white/5 hover:bg-[#222] transition"
+                    key={
+                      order._id
+                    }
+                    className="border-t border-white/5 hover:bg-[#1F2937] transition"
                   >
-
-                    <td className="px-8 py-5 font-semibold text-white">
-
-                      #
-                      {
-                        order?._id?.slice(
-                          0,
-                          8
-                        )
-                      }
-
-                    </td>
 
                     <td className="px-8 py-5">
 
                       <div>
 
-                        <h1 className="text-white font-semibold">
+                        <h3 className="text-white font-semibold">
 
-                          {
-                            order?.user
-                              ?.name ||
-                            "Customer"
-                          }
+                          #
+                          {order?._id?.slice(
+                            0,
+                            8
+                          )}
 
-                        </h1>
+                        </h3>
 
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-500 text-sm mt-1">
 
-                          {
-                            order?.user
-                              ?.email
-                          }
+                          {moment(
+                            order?.createdAt
+                          ).fromNow()}
 
                         </p>
 
-                        {/* TIME */}
-                        <p className="text-xs text-gray-500 mt-1">
+                      </div>
 
-                          {
-                            moment(
-                              order?.updatedAt
-                            ).fromNow()
-                          }
+                    </td>
+
+                    <td className="px-8 py-5">
+
+                      <div className="space-y-1">
+
+                        <h3 className="text-white font-semibold">
+
+                          {order?.user
+                            ?.name ||
+                            "Customer"}
+
+                        </h3>
+
+                        <p className="text-gray-400 text-sm">
+
+                          {order?.user
+                            ?.email}
 
                         </p>
 
@@ -146,62 +174,62 @@ export default function OrderTable({
 
                       <div className="space-y-2">
 
-                        {
-                          order?.items?.map(
-                            (
-                              item,
-                              index
-                            ) => (
+                        {order?.items?.map(
+                          (
+                            item,
+                            index
+                          ) => (
+                            <div
+                              key={
+                                index
+                              }
+                              className="flex items-center gap-2 text-sm"
+                            >
 
-                              <div
-                                key={
-                                  index
+                              <span className="text-white">
+
+                                {
+                                  item
+                                    ?.food
+                                    ?.title
                                 }
-                                className="text-sm"
-                              >
 
-                                <span className="text-white">
+                              </span>
 
-                                  {
-                                    item
-                                      ?.food
-                                      ?.title
-                                  }
+                              <span className="text-gray-400">
 
-                                </span>
+                                ×
+                                {
+                                  item?.quantity
+                                }
 
-                                <span className="text-gray-400 ml-2">
+                              </span>
 
-                                  x
-                                  {
-                                    item?.quantity
-                                  }
-
-                                </span>
-
-                              </div>
-
-                            )
+                            </div>
                           )
-                        }
+                        )}
 
                       </div>
 
                     </td>
 
-                    <td className="px-8 py-5 text-green-400 font-bold">
+                    <td className="px-8 py-5">
 
-                      ₹
-                      {
-                        order?.totalPrice
-                      }
+                      <span className="text-green-400 font-bold text-lg">
+
+                        ₹
+                        {
+                          order?.totalPrice
+                        }
+
+                      </span>
 
                     </td>
 
                     <td className="px-8 py-5">
 
-                      <OrderStatusBadge
-                        status={
+                      <StatusBadge
+                        orderStatus={
                           order?.status
                         }
                       />
@@ -214,38 +242,53 @@ export default function OrderTable({
                         value={
                           order?.status
                         }
-                        onChange={(e) =>
-                          handleStatusChange(
+                        onChange={(
+                          event
+                        ) =>
+                          changeOrderStatus(
                             order._id,
-                            e.target
+                            event
+                              .target
                               .value
                           )
                         }
-                        className="bg-[#222] border border-white/10 text-white px-4 py-3 rounded-xl outline-none"
+                        className="bg-[#0F172A] border border-white/10 text-white rounded-2xl px-4 py-3 outline-none focus:border-red-500 transition"
                       >
 
                         <option value="pending">
+
                           Pending
+
                         </option>
 
                         <option value="confirmed">
+
                           Confirmed
+
                         </option>
 
                         <option value="preparing">
+
                           Preparing
+
                         </option>
 
                         <option value="out_for_delivery">
+
                           Out For Delivery
+
                         </option>
 
                         <option value="delivered">
+
                           Delivered
+
                         </option>
 
                         <option value="cancelled">
+
                           Cancelled
+
                         </option>
 
                       </select>
@@ -253,26 +296,22 @@ export default function OrderTable({
                     </td>
 
                   </tr>
-
-                ))
-
-              ) : (
-
-                <tr>
-
-                  <td
-                    colSpan="6"
-                    className="text-center py-16 text-gray-400 text-lg"
-                  >
-
-                    No Orders Found
-
-                  </td>
-
-                </tr>
-
+                )
               )
-            }
+            ) : (
+              <tr>
+
+                <td
+                  colSpan="6"
+                  className="text-center py-16 text-gray-500 text-lg"
+                >
+
+                  No Orders Found
+
+                </td>
+
+              </tr>
+            )}
 
           </tbody>
 

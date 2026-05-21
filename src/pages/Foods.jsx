@@ -8,23 +8,23 @@ import {
   useSelector,
 } from "react-redux";
 
-import Sidebar from "../components/common/Sidebar";
+import DashboardLayout from "../components/layout/DashboardLayout";
+import FoodTable from "../components/food/FoodTable";
 
-import Topbar from "../components/common/Topbar";
+import AddFood from "../components/food/AddFoodModal";
+import DashboardHeader from "../components/layout/DashboardHeader";
 
 import Loader from "../components/common/Loader";
 
-import AddFoodModal from "../components/food/AddFoodModal";
-
-import FoodCard from "../components/food/FoodCard";
+import EmptyState from "../components/common/EmptyState";
 
 import {
   getFoods,
-} from "../features/foodSlice";
+} from "../features/food/foodSlice";
 
-export default function Foods() {
-
-  const dispatch = useDispatch();
+export default function Food() {
+  const dispatch =
+    useDispatch();
 
   const [openModal, setOpenModal] =
     useState(false);
@@ -32,73 +32,51 @@ export default function Foods() {
   const {
     foods,
     loading,
-    error,
   } = useSelector(
     (state) => state.foods
   );
 
   useEffect(() => {
-
     dispatch(getFoods());
+  }, [dispatch]);
 
-  }, []);
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex">
+    <DashboardLayout>
 
-      <Sidebar />
-
-      <AddFoodModal
-        open={openModal}
-        setOpen={setOpenModal}
+      <DashboardHeader
+        title="Foods"
+        subtitle="Manage restaurant foods"
+        buttonText="Add Food"
+        buttonAction={() =>
+          setOpenModal(true)
+        }
       />
 
-      <div className="flex-1 overflow-y-auto">
-
-        <Topbar
-          title="Food Management"
-          subtitle="Manage all restaurant food items"
-          buttonText="Add Food"
-          onClick={() =>
-            setOpenModal(true)
-          }
-        />
-
-        {
-          loading && <Loader />
+      <AddFood
+        isOpen={
+          openModal
         }
+        onClose={() =>
+          setOpenModal(false)
+        }
+      />
 
-        <div className="p-8">
+      {foods?.length >
+      0 ? (
+        <FoodTable
+          foods={foods}
+        />
+      ) : (
+        <EmptyState
+          title="No Foods Found"
+          description="Add your first food item."
+        />
+      )}
 
-          {
-            error && (
-              <div className="bg-red-500/20 border border-red-500 text-red-400 px-5 py-4 rounded-2xl mb-6">
-
-                {error}
-
-              </div>
-            )
-          }
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            {
-              foods?.map((food) => (
-
-                <FoodCard
-                  key={food._id}
-                  food={food}
-                />
-
-              ))
-            }
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
+    </DashboardLayout>
   );
 }

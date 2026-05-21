@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useState,
 } from "react";
 
@@ -6,19 +7,15 @@ import {
   useDispatch,
 } from "react-redux";
 
-import {
-  FiUploadCloud,
-} from "react-icons/fi";
-
 import Modal from "../common/Modal";
 
 import {
-  addFood,
+  updateFood,
 } from "../../features/food/foodSlice";
 
-export default function AddFoodModal({
-  isOpen,
-  onClose,
+export default function EditFoodModal({
+  selectedFood,
+  closeModal,
 }) {
   const dispatch =
     useDispatch();
@@ -32,8 +29,38 @@ export default function AddFoodModal({
       price: "",
       category: "",
       description: "",
+      isAvailable: true,
       image: null,
     });
+
+  useEffect(() => {
+    if (selectedFood) {
+      setFoodForm({
+        title:
+          selectedFood.title,
+
+        price:
+          selectedFood.price,
+
+        category:
+          selectedFood.category,
+
+        description:
+          selectedFood.description,
+
+        isAvailable:
+          selectedFood.isAvailable,
+
+        image: null,
+      });
+
+      setPreviewImage(
+        selectedFood.image
+          ? `https://zomato-clone-api-5e4m.onrender.com${selectedFood.image}`
+          : ""
+      );
+    }
+  }, [selectedFood]);
 
   const updateInputField = (
     event
@@ -67,64 +94,46 @@ export default function AddFoodModal({
     );
   };
 
-  const submitFoodForm =
+  const submitUpdatedFood =
     async (event) => {
       event.preventDefault();
 
       const formData =
         new FormData();
 
-      formData.append(
-        "title",
-        foodForm.title
-      );
-
-      formData.append(
-        "price",
-        foodForm.price
-      );
-
-      formData.append(
-        "category",
-        foodForm.category
-      );
-
-      formData.append(
-        "description",
-        foodForm.description
-      );
-
-      formData.append(
-        "image",
-        foodForm.image
-      );
-
-      await dispatch(
-        addFood(formData)
-      );
-
-      onClose();
-
-      setFoodForm({
-        title: "",
-        price: "",
-        category: "",
-        description: "",
-        image: null,
+      Object.keys(
+        foodForm
+      ).forEach((key) => {
+        formData.append(
+          key,
+          foodForm[key]
+        );
       });
 
-      setPreviewImage("");
+      await dispatch(
+        updateFood({
+          id: selectedFood._id,
+
+          formData,
+        })
+      );
+
+      closeModal();
     };
 
   return (
     <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Add Food Item"
+      isOpen={
+        !!selectedFood
+      }
+      onClose={
+        closeModal
+      }
+      title="Edit Food Item"
     >
       <form
         onSubmit={
-          submitFoodForm
+          submitUpdatedFood
         }
         className="space-y-5"
       >
@@ -133,9 +142,9 @@ export default function AddFoodModal({
 
           <label className="cursor-pointer">
 
-            <div className="w-44 h-44 rounded-3xl border-2 border-dashed border-red-500 bg-[#1F2937] overflow-hidden flex items-center justify-center">
+            <div className="w-40 h-40 rounded-3xl overflow-hidden border-2 border-dashed border-red-500 bg-[#1F2937]">
 
-              {previewImage ? (
+              {previewImage && (
                 <img
                   src={
                     previewImage
@@ -143,18 +152,6 @@ export default function AddFoodModal({
                   alt="preview"
                   className="w-full h-full object-cover"
                 />
-              ) : (
-                <div className="text-center">
-
-                  <FiUploadCloud className="text-5xl text-red-500 mx-auto" />
-
-                  <p className="text-white font-semibold mt-4">
-
-                    Upload Food Image
-
-                  </p>
-
-                </div>
               )}
 
             </div>
@@ -175,7 +172,6 @@ export default function AddFoodModal({
         <input
           type="text"
           name="title"
-          placeholder="Food Title"
           value={
             foodForm.title
           }
@@ -183,13 +179,11 @@ export default function AddFoodModal({
             updateInputField
           }
           className="input-primary"
-          required
         />
 
         <input
           type="number"
           name="price"
-          placeholder="Food Price"
           value={
             foodForm.price
           }
@@ -197,47 +191,11 @@ export default function AddFoodModal({
             updateInputField
           }
           className="input-primary"
-          required
         />
-
-        <select
-          name="category"
-          value={
-            foodForm.category
-          }
-          onChange={
-            updateInputField
-          }
-          className="input-primary"
-          required
-        >
-
-          <option value="">
-            Select Category
-          </option>
-
-          <option value="Starter">
-            Starter
-          </option>
-
-          <option value="Main Course">
-            Main Course
-          </option>
-
-          <option value="Dessert">
-            Dessert
-          </option>
-
-          <option value="Beverages">
-            Beverages
-          </option>
-
-        </select>
 
         <textarea
           rows="4"
           name="description"
-          placeholder="Food Description"
           value={
             foodForm.description
           }
@@ -245,7 +203,6 @@ export default function AddFoodModal({
             updateInputField
           }
           className="input-primary resize-none"
-          required
         ></textarea>
 
         <button
@@ -253,7 +210,7 @@ export default function AddFoodModal({
           className="btn-primary w-full"
         >
 
-          Add Food
+          Update Food
 
         </button>
 

@@ -6,22 +6,17 @@ import {
 
 import Login from "../pages/Login";
 
-import Signup from "../pages/Signup";
+import Register from "../pages/Register";
 
 import Dashboard from "../pages/Dashboard";
 
-import Orders from "../pages/Orders";
-
-import Foods from "../pages/Foods";
-
-import ForgotPassword from "../pages/ForgotPassword";
-
-import ChangePassword from "../pages/ChangePassword";
+import Food from "../pages/Foods";
+import ChangePassword from "../pages/ChangePassword.jsx";
+import Order from "../pages/Orders";
 
 import ProtectedRoute from "../components/common/ProtectedRoute";
 
 export default function AppRoutes() {
-
   return (
     <BrowserRouter>
 
@@ -33,14 +28,9 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/signup"
-          element={<Signup />}
-        />
-
-        <Route
-          path="/forgot-password"
+          path="/register"
           element={
-            <ForgotPassword />
+            <Register />
           }
         />
 
@@ -60,7 +50,7 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
 
-              <Foods />
+              <Food />
 
             </ProtectedRoute>
           }
@@ -71,7 +61,7 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
 
-              <Orders />
+              <Order />
 
             </ProtectedRoute>
           }
@@ -81,9 +71,7 @@ export default function AppRoutes() {
           path="/change-password"
           element={
             <ProtectedRoute>
-
               <ChangePassword />
-
             </ProtectedRoute>
           }
         />

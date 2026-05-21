@@ -1,226 +1,204 @@
 import {
+  FiEdit2,
   FiTrash2,
-  FiEdit,
 } from "react-icons/fi";
-
-import {
-  useDispatch,
-} from "react-redux";
-
-import {
-  useState,
-} from "react";
-
-import {
-  deleteFood,
-} from "../../features/foodSlice";
-
-import UpdateFoodModal from "./UpdateFoodModal";
 
 export default function FoodTable({
   foods,
+  onEdit,
+  onDelete,
 }) {
-
-  const dispatch = useDispatch();
-
-  const [editFood, setEditFood] =
-    useState(null);
-
-  const handleDelete = (id) => {
-
-    const confirmDelete =
-      window.confirm(
-        "Delete this food item?"
-      );
-
-    if (!confirmDelete) return;
-
-    dispatch(deleteFood(id));
-  };
-
   return (
-    <>
-      <UpdateFoodModal
-        editFood={editFood}
-        setEditFood={setEditFood}
-      />
+    <div className="bg-[#111827] border border-white/5 rounded-3xl overflow-hidden">
 
-      <div className="bg-[#1b1b1b] rounded-3xl border border-white/5 overflow-hidden">
+      <div className="px-8 py-6 border-b border-white/5">
 
-        <div className="px-8 py-6 border-b border-white/5">
+        <h2 className="text-3xl font-bold text-white">
 
-          <h1 className="text-3xl font-bold text-white">
-            Food Menu
-          </h1>
+          Food Menu
 
-        </div>
+        </h2>
 
-        <div className="overflow-x-auto">
+      </div>
 
-          <table className="w-full">
+      <div className="overflow-x-auto">
 
-            <thead className="bg-[#222]">
+        <table className="w-full">
 
-              <tr>
+          <thead className="bg-[#1F2937]">
 
-                <th className="text-left px-8 py-5">
-                  Image
-                </th>
+            <tr>
 
-                <th className="text-left px-8 py-5">
-                  Title
-                </th>
+              <th className="px-8 py-5 text-left">
 
-                <th className="text-left px-8 py-5">
-                  Category
-                </th>
+                Image
 
-                <th className="text-left px-8 py-5">
-                  Price
-                </th>
+              </th>
 
-                <th className="text-left px-8 py-5">
-                  Status
-                </th>
+              <th className="px-8 py-5 text-left">
 
-                <th className="text-left px-8 py-5">
-                  Actions
-                </th>
+                Food
 
-              </tr>
+              </th>
 
-            </thead>
+              <th className="px-8 py-5 text-left">
 
-            <tbody>
+                Category
 
-              {
-                foods?.length > 0 ? (
+              </th>
 
-                  foods?.map((food) => (
+              <th className="px-8 py-5 text-left">
 
-                    <tr
-                      key={food._id}
-                      className="border-t border-white/5 hover:bg-[#222] transition"
-                    >
+                Price
 
-                      <td className="px-8 py-5">
+              </th>
 
-                        <img
-                          src={
-                            food?.image
-                              ? `https://zomato-clone-api-5e4m.onrender.com${food.image}`
-                              : "/food.png"
+              <th className="px-8 py-5 text-left">
+
+                Status
+
+              </th>
+
+              <th className="px-8 py-5 text-left">
+
+                Actions
+
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {foods?.length >
+            0 ? (
+              foods.map(
+                (food) => (
+                  <tr
+                    key={
+                      food._id
+                    }
+                    className="border-t border-white/5 hover:bg-[#1F2937] transition"
+                  >
+
+                    <td className="px-8 py-5">
+
+                      <img
+                        src={
+                          food?.image
+                            ? `https://zomato-clone-api-5e4m.onrender.com${food.image}`
+                            : "/food.png"
+                        }
+                        alt={
+                          food?.title
+                        }
+                        className="w-16 h-16 rounded-2xl object-cover"
+                      />
+
+                    </td>
+
+                    <td className="px-8 py-5 text-white font-semibold">
+
+                      {
+                        food?.title
+                      }
+
+                    </td>
+
+                    <td className="px-8 py-5 text-gray-400">
+
+                      {
+                        food?.category
+                      }
+
+                    </td>
+
+                    <td className="px-8 py-5 text-green-400 font-bold">
+
+                      ₹
+                      {
+                        food?.price
+                      }
+
+                    </td>
+
+                    <td className="px-8 py-5">
+
+                      <span
+                        className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                          food?.isAvailable
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-red-500/20 text-red-400"
+                        }`}
+                      >
+
+                        {food?.isAvailable
+                          ? "Available"
+                          : "Unavailable"}
+
+                      </span>
+
+                    </td>
+
+                    <td className="px-8 py-5">
+
+                      <div className="flex items-center gap-3">
+
+                        <button
+                          onClick={() =>
+                            onEdit(
+                              food
+                            )
                           }
-                          alt={food?.title}
-                          className="w-16 h-16 rounded-xl object-cover"
-                        />
-
-                      </td>
-
-                      <td className="px-8 py-5 text-white font-semibold">
-
-                        {food?.title}
-
-                      </td>
-
-                      <td className="px-8 py-5 text-gray-300">
-
-                        {food?.category}
-
-                      </td>
-
-                      <td className="px-8 py-5 text-green-400 font-semibold">
-
-                        ₹{food?.price}
-
-                      </td>
-
-                      <td className="px-8 py-5">
-
-                        <span
-                          className={`px-4 py-2 rounded-full text-sm font-semibold
-                          
-                          ${food?.isAvailable
-                              ? "bg-green-500/20 text-green-400"
-                              : "bg-red-500/20 text-red-400"
-                            }
-                          
-                          `}
+                          className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white transition flex items-center justify-center"
                         >
 
-                          {
-                            food?.isAvailable
-                              ? "Available"
-                              : "Unavailable"
+                          <FiEdit2 />
+
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            onDelete(
+                              food._id
+                            )
                           }
+                          className="w-10 h-10 rounded-xl bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white transition flex items-center justify-center"
+                        >
 
-                        </span>
+                          <FiTrash2 />
 
-                      </td>
+                        </button>
 
-                      <td className="px-8 py-5">
-
-                        <div className="flex items-center gap-3">
-
-                          <button
-                            onClick={() =>
-                              setEditFood(
-                                food
-                              )
-                            }
-                            className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500 transition flex items-center justify-center text-blue-400 hover:text-white"
-                          >
-
-                            <FiEdit />
-
-                          </button>
-
-                          <button
-                            onClick={() =>
-                              handleDelete(
-                                food._id
-                              )
-                            }
-                            className="w-10 h-10 rounded-xl bg-red-500/20 hover:bg-red-500 transition flex items-center justify-center text-red-400 hover:text-white"
-                          >
-
-                            <FiTrash2 />
-
-                          </button>
-
-                        </div>
-
-                      </td>
-
-                    </tr>
-
-                  ))
-
-                ) : (
-
-                  <tr>
-
-                    <td
-                      colSpan="6"
-                      className="text-center py-12 text-gray-400"
-                    >
-
-                      No Food Items Found
+                      </div>
 
                     </td>
 
                   </tr>
-
                 )
-              }
+              )
+            ) : (
+              <tr>
 
-            </tbody>
+                <td
+                  colSpan="6"
+                  className="text-center py-16 text-gray-500 text-lg"
+                >
 
-          </table>
+                  No Food Items Found
 
-        </div>
+                </td>
+
+              </tr>
+            )}
+
+          </tbody>
+
+        </table>
 
       </div>
-    </>
+
+    </div>
   );
 }

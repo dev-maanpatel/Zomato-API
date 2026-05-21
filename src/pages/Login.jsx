@@ -3,158 +3,179 @@ import {
 } from "react";
 
 import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import {
   useDispatch,
   useSelector,
 } from "react-redux";
 
 import {
   loginUser,
-} from "../features/authSlice";
+} from "../features/auth/authSlice";
 
-import {
-  useNavigate,
-} from "react-router-dom";
+import Loader from "../components/common/Loader";
 
 export default function Login() {
+  const dispatch =
+    useDispatch();
 
-  const dispatch = useDispatch();
+  const navigate =
+    useNavigate();
 
-  const navigate = useNavigate();
+  const {
+    loading,
+    error,
+  } = useSelector(
+    (state) => state.auth
+  );
 
-  const { loading, error } =
-    useSelector((state) => state.auth);
-
-  const [formData, setFormData] =
+  const [loginForm, setLoginForm] =
     useState({
       email: "",
       password: "",
     });
 
-  const handleChange = (e) => {
+  const changeInputValue =
+    (event) => {
+      setLoginForm({
+        ...loginForm,
 
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.value,
-    });
-  };
+        [event.target.name]:
+          event.target.value,
+      });
+    };
 
-  const handleLogin = async (
-    e
-  ) => {
+  const submitLoginForm =
+    async (event) => {
+      event.preventDefault();
 
-    e.preventDefault();
+      const response =
+        await dispatch(
+          loginUser(
+            loginForm
+          )
+        );
 
-    const res = await dispatch(
-      loginUser(formData)
-    );
-
-    if (
-      res.meta.requestStatus ===
-      "fulfilled"
-    ) {
-
-      navigate("/dashboard");
-    }
-  };
+      if (
+        response?.payload
+      ) {
+        navigate(
+          "/dashboard"
+        );
+      }
+    };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex">
+    <div className="min-h-screen bg-black flex items-center justify-center p-5">
 
-      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-red-600 to-orange-500 items-center justify-center p-16">
+      {loading && (
+        <Loader />
+      )}
 
-        <div>
+      <div className="w-full max-w-6xl grid lg:grid-cols-2 bg-[#111827] rounded-[40px] overflow-hidden border border-white/10">
 
-          <h1 className="text-7xl font-bold text-white">
-            Zomato
+        <div className="hidden lg:flex flex-col justify-center bg-gradient-to-br from-red-500 to-red-700 p-16">
+
+          <h1 className="text-6xl font-black text-white leading-tight">
+
+            Welcome
+            <br />
+            Back
+
           </h1>
 
-          <p className="text-white/90 mt-5 text-xl">
-            Restaurant Partner Dashboard
+          <p className="text-white/80 mt-6 text-lg leading-8">
+
+            Manage your restaurant orders, foods and customers with modern dashboard experience.
+
           </p>
 
         </div>
 
-      </div>
+        <div className="p-8 lg:p-16">
 
-      <div className="flex-1 flex items-center justify-center px-6">
+          <h2 className="text-5xl font-black text-white">
 
-        <div className="w-full max-w-md">
+            Login
 
-          <h1 className="text-4xl font-bold text-white mb-2">
-            Welcome Back
-          </h1>
+          </h2>
 
-          <p className="text-gray-400 mb-8">
-            Login to continue
+          <p className="text-gray-400 mt-3">
+
+            Restaurant Partner Dashboard
+
           </p>
 
-          {
-            error && (
-              <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-xl mb-5">
-                {error}
-              </div>
-            )
-          }
+          {error && (
+            <div className="mt-6 bg-red-500/20 border border-red-500/20 text-red-400 px-5 py-4 rounded-2xl">
+
+              {error}
+
+            </div>
+          )}
 
           <form
-            onSubmit={handleLogin}
-            className="space-y-5"
+            onSubmit={
+              submitLoginForm
+            }
+            className="space-y-5 mt-10"
           >
 
             <input
               type="email"
               name="email"
-              placeholder="Email"
-              onChange={handleChange}
-              className="zomatoInput"
+              placeholder="Enter Email"
+              value={
+                loginForm.email
+              }
+              onChange={
+                changeInputValue
+              }
+              className="input-primary"
+              required
             />
 
             <input
               type="password"
               name="password"
-              placeholder="Password"
-              onChange={handleChange}
-              className="zomatoInput"
+              placeholder="Enter Password"
+              value={
+                loginForm.password
+              }
+              onChange={
+                changeInputValue
+              }
+              className="input-primary"
+              required
             />
 
-            <p
-              onClick={() =>
-                navigate(
-                  "/forgot-password"
-                )
-              }
-              className="text-red-400 text-right cursor-pointer"
+            <button
+              type="submit"
+              className="btn-primary w-full"
             >
 
-              Forgot Password?
-
-            </p>
-
-            <button className="primaryBtn">
-
-              {
-                loading
-                  ? "Loading..."
-                  : "Login"
-              }
+              Login Now
 
             </button>
 
           </form>
 
-          <p
-            onClick={() =>
-              navigate("/signup")
-            }
-            className="text-center text-gray-400 mt-6 cursor-pointer"
-          >
+          <p className="text-gray-400 mt-8">
 
-            Don’t have account?
+            Don't have account?
             {" "}
-            <span className="text-red-400">
-              Signup
-            </span>
+
+            <Link
+              to="/register"
+              className="text-red-500 font-semibold"
+            >
+
+              Create Account
+
+            </Link>
 
           </p>
 

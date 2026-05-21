@@ -1,146 +1,108 @@
 import {
+  FiEdit2,
   FiTrash2,
-  FiEdit,
 } from "react-icons/fi";
-
-import {
-  useDispatch,
-} from "react-redux";
-
-import {
-  useState,
-} from "react";
-
-import {
-  deleteFood,
-} from "../../features/foodSlice";
-
-import UpdateFoodModal from "./UpdateFoodModal";
 
 export default function FoodCard({
   food,
+  onEdit,
+  onDelete,
 }) {
-
-  const dispatch = useDispatch();
-
-  const [editFood, setEditFood] =
-    useState(null);
-
-  const handleDelete = () => {
-
-    const confirmDelete =
-      window.confirm(
-        "Delete this food item?"
-      );
-
-    if (!confirmDelete) return;
-
-    dispatch(deleteFood(food._id));
-  };
-
   return (
-    <>
-      <UpdateFoodModal
-        editFood={editFood}
-        setEditFood={setEditFood}
-      />
+    <div className="bg-[#111827] border border-white/5 rounded-3xl overflow-hidden hover:border-red-500 transition duration-300 group">
 
-      <div className="bg-[#1b1b1b] rounded-3xl overflow-hidden border border-white/5 hover:border-red-500 transition">
+      <div className="relative overflow-hidden">
 
-        <div className="relative">
+        <img
+          src={
+            food?.image
+              ? `https://zomato-clone-api-5e4m.onrender.com${food.image}`
+              : "/food.png"
+          }
+          alt={food?.title}
+          className="w-full h-64 object-cover group-hover:scale-105 transition duration-500"
+        />
 
-          <img
-            src={
-              food?.image
-                ? `https://zomato-clone-api-5e4m.onrender.com${food.image}`
-                : "/food.png"
-            }
-            alt={food?.title}
-            className="w-full h-60 object-cover"
-          />
+        <div className="absolute top-4 left-4 bg-red-500 text-white text-sm px-4 py-2 rounded-full font-semibold">
 
-          <div className="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-
-            {food?.category}
-
-          </div>
+          {food?.category}
 
         </div>
 
-        <div className="p-5">
+      </div>
 
-          <div className="flex items-center justify-between">
+      <div className="p-5">
 
-            <h1 className="text-2xl font-bold text-white">
+        <div className="flex items-center justify-between">
 
-              {food?.title}
+          <h2 className="text-2xl font-bold text-white">
 
-            </h1>
+            {food?.title}
 
-            <span className="text-green-400 font-bold text-xl">
+          </h2>
 
-              ₹{food?.price}
+          <span className="text-green-400 font-bold text-xl">
 
-            </span>
+            ₹{food?.price}
 
-          </div>
+          </span>
 
-          <p className="text-gray-400 mt-4 line-clamp-2">
+        </div>
 
-            {food?.description}
+        <p className="text-gray-400 mt-4 line-clamp-2">
 
-          </p>
+          {food?.description}
 
-          <div className="flex items-center justify-between mt-5">
+        </p>
 
-            <span
-              className={`px-4 py-2 rounded-full text-sm font-semibold
-              
-              ${food?.isAvailable
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-red-500/20 text-red-400"
-                }
-              
-              `}
+        <div className="flex items-center justify-between mt-6">
+
+          <span
+            className={`px-4 py-2 rounded-full text-sm font-semibold ${
+              food?.isAvailable
+                ? "bg-green-500/20 text-green-400"
+                : "bg-red-500/20 text-red-400"
+            }`}
+          >
+
+            {food?.isAvailable
+              ? "Available"
+              : "Unavailable"}
+
+          </span>
+
+          <div className="flex items-center gap-3">
+
+            <button
+              onClick={() =>
+                onEdit(food)
+              }
+              className="w-11 h-11 rounded-2xl bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white transition flex items-center justify-center"
             >
 
-              {
-                food?.isAvailable
-                  ? "Available"
-                  : "Unavailable"
+              <FiEdit2 />
+
+            </button>
+
+            <button
+              onClick={() =>
+                onDelete(
+                  food._id
+                )
               }
+              className="w-11 h-11 rounded-2xl bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white transition flex items-center justify-center"
+            >
 
-            </span>
+              <FiTrash2 />
 
-            <div className="flex items-center gap-3">
-
-              <button
-                onClick={() =>
-                  setEditFood(food)
-                }
-                className="w-11 h-11 rounded-xl bg-blue-500/20 hover:bg-blue-500 transition flex items-center justify-center text-blue-400 hover:text-white"
-              >
-
-                <FiEdit />
-
-              </button>
-
-              <button
-                onClick={handleDelete}
-                className="w-11 h-11 rounded-xl bg-red-500/20 hover:bg-red-500 transition flex items-center justify-center text-red-400 hover:text-white"
-              >
-
-                <FiTrash2 />
-
-              </button>
-
-            </div>
+            </button>
 
           </div>
 
         </div>
 
       </div>
-    </>
+
+    </div>
   );
 }

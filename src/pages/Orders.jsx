@@ -7,72 +7,50 @@ import {
   useSelector,
 } from "react-redux";
 
-import Sidebar from "../components/common/Sidebar";
+import DashboardLayout from "../components/layout/DashboardLayout";
 
-import Topbar from "../components/common/Topbar";
-
-import Loader from "../components/common/Loader";
+import DashboardHeader from "../components/layout/DashboardHeader";
 
 import OrderTable from "../components/orders/OrderTable";
 
+import Loader from "../components/common/Loader";
+
 import {
   getOrders,
-} from "../features/orderSlice";
+} from "../features/order/orderSlice";
 
 export default function Orders() {
-
-  const dispatch = useDispatch();
+  const dispatch =
+    useDispatch();
 
   const {
     orders,
     loading,
-    error,
   } = useSelector(
-    (state) => state.orders
+    (state) =>
+      state.orders
   );
 
   useEffect(() => {
+    dispatch(
+      getOrders()
+    );
+  }, [dispatch]);
 
-    dispatch(getOrders());
-
-  }, []);
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex">
+    <DashboardLayout>
+      <DashboardHeader
+        title="Orders"
+        subtitle="Manage customer orders"
+      />
 
-      <Sidebar />
-
-      <div className="flex-1 overflow-y-auto">
-
-        <Topbar
-          title="Orders Management"
-          subtitle="Manage all restaurant orders"
-        />
-
-        {
-          loading && <Loader />
-        }
-
-        <div className="p-8">
-
-          {
-            error && (
-              <div className="bg-red-500/20 border border-red-500 text-red-400 px-5 py-4 rounded-2xl mb-6">
-
-                {error}
-
-              </div>
-            )
-          }
-
-          <OrderTable
-            orders={orders}
-          />
-
-        </div>
-
-      </div>
-
-    </div>
+      <OrderTable
+        orders={orders}
+      />
+    </DashboardLayout>
   );
 }

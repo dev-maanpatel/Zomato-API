@@ -1,0 +1,126 @@
+.input-primary {
+  width: 100%;
+
+  background: #111827;
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  color: white;
+
+  padding: 18px 20px;
+
+  border-radius: 20px;
+
+  outline: none;
+
+  transition: 0.3s;
+}
+
+.input-primary:focus {
+  border-color: #ef4444;
+
+  box-shadow: 0 0 0 4px
+    rgba(
+      239,
+      68,
+      68,
+      0.1
+    );
+}
+
+.input-primary::placeholder {
+  color: #6b7280;
+}
+
+.btn-primary {
+  background: #ef4444;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 20px;
+
+  padding: 18px 24px;
+
+  font-weight: 700;
+
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: #dc2626;
+
+  transform: translateY(
+    -2px
+  );
+}
+
+.btn-secondary {
+  background: #1f2937;
+
+  color: white;
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border-radius: 20px;
+
+  padding: 18px 24px;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.btn-secondary:hover {
+  background: #374151;
+}
+
+.card-primary {
+  background: #111827;
+
+  border-radius: 30px;
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+
+  overflow: hidden;
+}
+
+.glass-effect {
+  background: rgba(
+    17,
+    24,
+    39,
+    0.8
+  );
+
+  backdrop-filter: blur(
+    20px
+  );
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.05
+    );
+}
